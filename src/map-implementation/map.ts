@@ -14,6 +14,7 @@ export class MapLibreImplementation {
             center: [-122.420679, 37.772537],
             zoom: 20,
             style: "https://api.maptiler.com/maps/streets/style.json?key=IHriHQgQWN2WA4EHxu0r",
+            attributionControl: false,
         });
 
         this.map.once("styledata", () => {
