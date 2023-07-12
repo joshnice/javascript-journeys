@@ -26,8 +26,9 @@ export class MapLibreImplementation {
             id: uuid(),
             type: ScenegraphLayer,
             scenegraph:
-                "https://model-repo-488fcbb8-6cc3-4249-9acf-ea68bbdda2ee.s3.eu-west-2.amazonaws.com/animtated_cube.glb",
-            data: [{ position: [-122.420679, 37.772537], size: 100 }],
+                "https://model-repo-488fcbb8-6cc3-4249-9acf-ea68bbdda2ee.s3.eu-west-2.amazonaws.com/car.glb",
+            data: [{ position: [-122.420679, 37.772537] }],
+            sizeScale: 3,
             getPosition: (d) => d.position,
             getOrientation: () => [0, 0, 90],
             _animations: {
