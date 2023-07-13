@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@deck.gl/core':
+    specifier: ^8.9.21
+    version: 8.9.21
   '@deck.gl/mapbox':
     specifier: ^8.9.21
     version: 8.9.21(@deck.gl/core@8.9.21)
@@ -40,6 +43,9 @@ devDependencies:
   '@types/react-dom':
     specifier: ^18.2.6
     version: 18.2.6
+  '@types/uuid':
+    specifier: ^9.0.2
+    version: 9.0.2
   '@vitejs/plugin-react':
     specifier: ^4.0.1
     version: 4.0.3(vite@4.4.3)
@@ -1289,6 +1295,10 @@ packages:
 
   /@types/scheduler@0.16.3:
     resolution: {integrity: sha512-5cJ8CB4yAx7BH1oMvdU0Jh9lrEXyPkar6F9G/ERswkCuvP4KQZfZkSjcMbAICCpQTN4OuZn8tz0HiKv9TGZgrQ==}
+
+  /@types/uuid@9.0.2:
+    resolution: {integrity: sha512-kNnC1GFBLuhImSnV7w4njQkUiJi0ZXUycu1rUaouPqiKlXkh77JKgdRnTAp1x5eBwcIwbtI+3otwzuIDEuDoxQ==}
+    dev: true
 
   /@vitejs/plugin-react@4.0.3(vite@4.4.3):
     resolution: {integrity: sha512-pwXDog5nwwvSIzwrvYYmA2Ljcd/ZNlcsSG2Q9CNDBwnsd55UGAyr2doXtB5j+2uymRCnCfExlznzzSFbBRcoCg==}

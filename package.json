@@ -9,6 +9,7 @@
         "preview": "vite preview"
     },
     "dependencies": {
+        "@deck.gl/core": "^8.9.21",
         "@deck.gl/mapbox": "^8.9.21",
         "@deck.gl/mesh-layers": "^8.9.21",
         "@headlessui/react": "^1.7.15",
@@ -22,6 +23,7 @@
     "devDependencies": {
         "@types/react": "^18.2.14",
         "@types/react-dom": "^18.2.6",
+        "@types/uuid": "^9.0.2",
         "@vitejs/plugin-react": "^4.0.1",
         "autoprefixer": "^10.4.14",
         "postcss": "^8.4.25",

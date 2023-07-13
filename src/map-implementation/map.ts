@@ -1,7 +1,8 @@
-import { Map } from "maplibre-gl";
+import { CustomLayerInterface, Map } from "maplibre-gl";
 
-import { MapboxLayer } from "@deck.gl/mapbox";
-import { ScenegraphLayer } from "@deck.gl/mesh-layers";
+import type { Layer } from "@deck.gl/core/typed";
+import { MapboxLayer } from "@deck.gl/mapbox/typed";
+import { ScenegraphLayer } from "@deck.gl/mesh-layers/typed";
 
 import { v4 as uuid } from "uuid";
 
@@ -22,10 +23,13 @@ export class MapLibreImplementation {
 
     private map: Map;
 
-    private layers: MapboxLayer[] = [];
+    private layers: MapboxLayer<Layer>[] = [];
 
     public startRoute(route: GeoJSON.LineString) {
         console.log(route);
+        const layer = this.layers[0];
+        console.log("layer", layer);
+        // layer.setProps({ id: layer.id, data: [ {position: [-122.420679, 37.772537]} ] });
     }
 
     public destory() {
@@ -33,8 +37,9 @@ export class MapLibreImplementation {
     }
 
     private addModelLayers(): void {
-        const modelLayer = new MapboxLayer({
+        const modelLayer = new MapboxLayer<Layer>({
             id: uuid(),
+            // @ts-ignore
             type: ScenegraphLayer,
             scenegraph: "https://model-repo-488fcbb8-6cc3-4249-9acf-ea68bbdda2ee.s3.eu-west-2.amazonaws.com/car.glb",
             data: [{ position: [-122.420679, 37.772537] }],
@@ -47,6 +52,6 @@ export class MapLibreImplementation {
             _lighting: "pbr",
         });
         this.layers.push(modelLayer);
-        this.map.addLayer(modelLayer);
+        this.map.addLayer(modelLayer as unknown as CustomLayerInterface);
     }
 }
