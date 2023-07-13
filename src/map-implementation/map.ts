@@ -6,8 +6,6 @@ import { ScenegraphLayer } from "@deck.gl/mesh-layers";
 import { v4 as uuid } from "uuid";
 
 export class MapLibreImplementation {
-    private map: Map;
-
     constructor(mapElement: HTMLElement) {
         this.map = new Map({
             container: mapElement,
@@ -22,12 +20,23 @@ export class MapLibreImplementation {
         });
     }
 
+    private map: Map;
+
+    private layers: MapboxLayer[] = [];
+
+    public startRoute(route: GeoJSON.LineString) {
+        console.log(route);
+    }
+
+    public destory() {
+        this.map.remove();
+    }
+
     private addModelLayers(): void {
         const modelLayer = new MapboxLayer({
             id: uuid(),
             type: ScenegraphLayer,
-            scenegraph:
-                "https://model-repo-488fcbb8-6cc3-4249-9acf-ea68bbdda2ee.s3.eu-west-2.amazonaws.com/car.glb",
+            scenegraph: "https://model-repo-488fcbb8-6cc3-4249-9acf-ea68bbdda2ee.s3.eu-west-2.amazonaws.com/car.glb",
             data: [{ position: [-122.420679, 37.772537] }],
             sizeScale: 3,
             getPosition: (d) => d.position,
@@ -37,10 +46,7 @@ export class MapLibreImplementation {
             },
             _lighting: "pbr",
         });
+        this.layers.push(modelLayer);
         this.map.addLayer(modelLayer);
-    }
-
-    public destory() {
-        this.map.remove();
     }
 }
