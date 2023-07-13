@@ -1,4 +1,4 @@
-import { CustomLayerInterface, Map } from "maplibre-gl";
+import { CustomLayerInterface, GeoJSONSourceSpecification, LineLayerSpecification, Map } from "maplibre-gl";
 
 import type { Layer } from "@deck.gl/core/typed";
 import { MapboxLayer } from "@deck.gl/mapbox/typed";
@@ -14,22 +14,28 @@ export class MapLibreImplementation {
             zoom: 20,
             style: "https://api.maptiler.com/maps/streets/style.json?key=IHriHQgQWN2WA4EHxu0r",
             attributionControl: false,
+            hash: true,
         });
+
+        this.routeGuideLine = new GuideLine(this.map);
 
         this.map.once("styledata", () => {
             this.addModelLayers();
         });
     }
 
-    private map: Map;
+    private readonly map: Map;
+
+    private readonly routeGuideLine: GuideLine;
 
     private layers: MapboxLayer<Layer>[] = [];
 
     public startRoute(route: GeoJSON.LineString) {
         console.log(route);
         const layer = this.layers[0];
-        console.log("layer", layer);
-        // layer.setProps({ id: layer.id, data: [ {position: [-122.420679, 37.772537]} ] });
+        console.log("layer", route.coordinates[0]);
+        layer.setProps({ id: layer.id, data: [{ position: route.coordinates[0] }] });
+        this.routeGuideLine.addGuideForRoute(route);
     }
 
     public destory() {
@@ -43,7 +49,7 @@ export class MapLibreImplementation {
             type: ScenegraphLayer,
             scenegraph: "https://model-repo-488fcbb8-6cc3-4249-9acf-ea68bbdda2ee.s3.eu-west-2.amazonaws.com/car.glb",
             data: [{ position: [-122.420679, 37.772537] }],
-            sizeScale: 3,
+            sizeScale: 10,
             getPosition: (d) => d.position,
             getOrientation: () => [0, 0, 90],
             _animations: {
@@ -53,5 +59,37 @@ export class MapLibreImplementation {
         });
         this.layers.push(modelLayer);
         this.map.addLayer(modelLayer as unknown as CustomLayerInterface);
+    }
+}
+
+class GuideLine {
+    constructor(map: Map) {
+        this.map = map;
+    }
+
+    private map: Map;
+
+    private guideLineId = "guide-line";
+
+    public addGuideForRoute(route: GeoJSON.LineString) {
+        this.addGuideLineSource(route);
+        this.addGuideLineLayer();
+    }
+
+    private addGuideLineSource(route: GeoJSON.LineString) {
+        this.map.addSource(this.guideLineId, { type: "geojson", data: route });
+    }
+
+    private addGuideLineLayer() {
+        const layer: LineLayerSpecification = {
+            id: this.guideLineId,
+            type: "line",
+            paint: {
+                "line-color": "blue",
+                "line-width": 10,
+            },
+            source: this.guideLineId,
+        };
+        this.map.addLayer(layer);
     }
 }
