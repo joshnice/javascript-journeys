@@ -1,4 +1,5 @@
 export type ModelData = {
     follow: boolean;
-    position: [number, number];
+    coords: [number, number];
+    bearing: number;
 };

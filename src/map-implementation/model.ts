@@ -3,7 +3,7 @@ import { Map } from "maplibre-gl";
 import type { Layer } from "@deck.gl/core/typed";
 import { MapboxLayer } from "@deck.gl/mapbox/typed";
 import { ScenegraphLayer } from "@deck.gl/mesh-layers/typed";
-import { length, lineChunk } from "@turf/turf";
+import { length, lineChunk, rhumbBearing } from "@turf/turf";
 import { v4 as uuid } from "uuid";
 import { Camera } from "./camera";
 import { ModelData } from "./types";
@@ -24,7 +24,11 @@ export class Model {
 
     private layer: MapboxLayer<Layer> | undefined;
 
-    private speedSlow = 20; // In meters per second roughly 20 Mph
+    private speedSlow = 13; // In meters per second roughly 30 Mph
+
+    private speedMedium = 18; // In meters per second roughly 40 Mph
+
+    private speedHigh = 22; // In meters per second roughly 40 Mph
 
     public getLayer() {
         if (this.layer == null) {
@@ -38,15 +42,21 @@ export class Model {
 
         // Breaks up the route into many sections
         const distanceMeters = length(route, { units: "meters" });
-        const timeInSeconds = distanceMeters / this.speedSlow;
+        const timeInSeconds = distanceMeters / this.speedHigh;
         const iterations = (timeInSeconds * 1000) / refreshRate;
         const section = distanceMeters / iterations;
 
-        const coords: [number, number][] = lineChunk(route, section, { units: "meters" }).features.map((feature) => feature.geometry.coordinates[0]);
+        const chunks: GeoJSON.FeatureCollection<GeoJSON.Point> = lineChunk(route, section, { units: "meters" });
+        const positions = chunks.features.map((feature) => {
+            const point = feature.geometry.coordinates[0];
+            const bearing = rhumbBearing(feature.geometry.coordinates[0], feature.geometry.coordinates[1]);
+            return { coords: point, bearing };
+        });
 
         const layer = this.getLayer();
-        for (const coord of coords) {
-            layer.setProps({ id: layer.id, data: [{ position: coord, follow: true }] });
+
+        for (const position of positions) {
+            layer.setProps({ id: layer.id, data: [{ coords: position.coords, follow: true, bearing: 360 - position.bearing }] });
             await new Promise<void>((res) => {
                 setTimeout(() => {
                     res();
@@ -60,16 +70,18 @@ export class Model {
             id: uuid(),
             // @ts-ignore
             type: ScenegraphLayer,
-            scenegraph: "https://model-repo-488fcbb8-6cc3-4249-9acf-ea68bbdda2ee.s3.eu-west-2.amazonaws.com/car.glb",
-            data: [{ position: [-122.420679, 37.772537], follow: true }],
+            scenegraph: "https://model-repo-488fcbb8-6cc3-4249-9acf-ea68bbdda2ee.s3.eu-west-2.amazonaws.com/animated-car.glb",
+            data: [{ coords: [-122.420679, 37.772537], follow: true, bearing: 0 }],
             sizeScale: 10,
             getPosition: (d: ModelData) => {
                 if (d.follow) {
-                    this.camera.syncCameraToModel(d.position, 10);
+                    this.camera.syncCameraToModel(d.coords);
                 }
-                return d.position;
+                return d.coords;
             },
-            getOrientation: () => [0, 0, 90],
+            getOrientation: (d: ModelData) => {
+                return [0, d.bearing, 90];
+            },
             _animations: {
                 "*": { speed: 1 },
             },
