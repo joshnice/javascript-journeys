@@ -3,7 +3,7 @@ import { Map } from "maplibre-gl";
 
 import type { Layer } from "@deck.gl/core/typed";
 import { MapboxLayer } from "@deck.gl/mapbox/typed";
-import type { ScenegraphLayer } from "@deck.gl/mesh-layers/typed";
+import { ScenegraphLayer } from "@deck.gl/mesh-layers/typed";
 
 import length from "@turf/length";
 
@@ -39,7 +39,6 @@ export class MapLibreImplementation {
     public startRoute(route: GeoJSON.LineString) {
         console.log(route);
         const layer = this.layers[0];
-        console.log("layer", route.coordinates[0]);
         layer.setProps({ id: layer.id, data: [{ position: route.coordinates[0] }] });
         this.routeGuideLine.addGuideForRoute(route);
         this.camera.cameraFollowRoute(route);
