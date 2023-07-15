@@ -1,8 +1,11 @@
-import { CustomLayerInterface, GeoJSONSourceSpecification, LineLayerSpecification, Map } from "maplibre-gl";
+import type { CustomLayerInterface, LineLayerSpecification } from "maplibre-gl";
+import { Map } from "maplibre-gl";
 
 import type { Layer } from "@deck.gl/core/typed";
 import { MapboxLayer } from "@deck.gl/mapbox/typed";
-import { ScenegraphLayer } from "@deck.gl/mesh-layers/typed";
+import type { ScenegraphLayer } from "@deck.gl/mesh-layers/typed";
+
+import length from "@turf/length";
 
 import { v4 as uuid } from "uuid";
 
@@ -17,16 +20,19 @@ export class MapLibreImplementation {
             hash: true,
         });
 
-        this.routeGuideLine = new GuideLine(this.map);
-
         this.map.once("styledata", () => {
             this.addModelLayers();
         });
+
+        this.routeGuideLine = new GuideLine(this.map);
+        this.camera = new Camera(this.map);
     }
 
     private readonly map: Map;
 
     private readonly routeGuideLine: GuideLine;
+
+    private readonly camera: Camera;
 
     private layers: MapboxLayer<Layer>[] = [];
 
@@ -36,6 +42,7 @@ export class MapLibreImplementation {
         console.log("layer", route.coordinates[0]);
         layer.setProps({ id: layer.id, data: [{ position: route.coordinates[0] }] });
         this.routeGuideLine.addGuideForRoute(route);
+        this.camera.cameraFollowRoute(route);
     }
 
     public destory() {
@@ -59,6 +66,19 @@ export class MapLibreImplementation {
         });
         this.layers.push(modelLayer);
         this.map.addLayer(modelLayer as unknown as CustomLayerInterface);
+    }
+}
+
+class Camera {
+    constructor(map: Map) {
+        this.map = map;
+    }
+
+    private readonly map: Map;
+
+    public cameraFollowRoute(route: GeoJSON.LineString) {
+        const routeDistance = length(route);
+        console.log("route distance", routeDistance);
     }
 }
 
