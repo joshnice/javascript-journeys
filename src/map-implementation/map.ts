@@ -1,5 +1,5 @@
 import { Map } from "maplibre-gl";
-import { GuideLine } from "./route";
+import { GuideLine } from "./guide-line";
 import { Camera } from "./camera";
 import { Model } from "./model";
 
