@@ -40,7 +40,7 @@ export class MapLibreImplementation {
         console.log(route);
         const layer = this.layers[0];
         layer.setProps({ id: layer.id, data: [{ position: route.coordinates[0] }] });
-        this.routeGuideLine.addGuideForRoute(route);
+        this.routeGuideLine.addGuideForRoute(route, layer.id);
         this.camera.cameraFollowRoute(route);
     }
 
@@ -90,16 +90,16 @@ class GuideLine {
 
     private guideLineId = "guide-line";
 
-    public addGuideForRoute(route: GeoJSON.LineString) {
+    public addGuideForRoute(route: GeoJSON.LineString, modelLayerId: string) {
         this.addGuideLineSource(route);
-        this.addGuideLineLayer();
+        this.addGuideLineLayer(modelLayerId);
     }
 
     private addGuideLineSource(route: GeoJSON.LineString) {
         this.map.addSource(this.guideLineId, { type: "geojson", data: route });
     }
 
-    private addGuideLineLayer() {
+    private addGuideLineLayer(modelLayerId: string) {
         const layer: LineLayerSpecification = {
             id: this.guideLineId,
             type: "line",
@@ -109,6 +109,6 @@ class GuideLine {
             },
             source: this.guideLineId,
         };
-        this.map.addLayer(layer);
+        this.map.addLayer(layer, modelLayerId);
     }
 }
