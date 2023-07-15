@@ -27,7 +27,7 @@ export const MapComponent = forwardRef((_, mapRef) => {
         }
 
         return () => {
-            mapLibreImplementationRef.current?.destory();
+            mapLibreImplementationRef.current?.destroy();
         };
     }, []);
 
