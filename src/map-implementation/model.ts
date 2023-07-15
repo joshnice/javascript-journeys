@@ -24,11 +24,12 @@ export class Model {
 
     private layer: MapboxLayer<Layer> | undefined;
 
-    private speedSlow = 13; // In meters per second roughly 30 Mph
-
-    private speedMedium = 18; // In meters per second roughly 40 Mph
-
-    private speedHigh = 22; // In meters per second roughly 40 Mph
+    private speedsMetersPerSecond = {
+        slow: 13, // Roughly 30 Mph
+        medium: 18, // Roughly 40 Mph
+        high: 22, // Roughly 50 Mph
+        veryHigh: 31, // Roughly 70 Mph
+    };
 
     public getLayer() {
         if (this.layer == null) {
@@ -42,7 +43,7 @@ export class Model {
 
         // Breaks up the route into many sections
         const distanceMeters = length(route, { units: "meters" });
-        const timeInSeconds = distanceMeters / this.speedHigh;
+        const timeInSeconds = distanceMeters / this.speedsMetersPerSecond.veryHigh;
         const iterations = (timeInSeconds * 1000) / refreshRate;
         const section = distanceMeters / iterations;
 
