@@ -9,10 +9,9 @@ export class Camera {
 
     private readonly refreshRate = 16;
 
-    public syncCameraToModel(modelPosition: [number, number], bearing: number) {
+    public syncCameraToModel(modelPosition: [number, number]) {
         this.map.flyTo({
             center: modelPosition,
-            bearing,
             maxDuration: this.refreshRate,
         });
     }
