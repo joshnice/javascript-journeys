@@ -5,6 +5,7 @@ import { getRoute } from "../api/mapbox-direction";
 
 export type MapRef = {
     startRoute: () => void;
+    setFollowModel: (value: boolean) => void;
 };
 
 export const MapComponent = forwardRef((_, mapRef) => {
@@ -17,6 +18,7 @@ export const MapComponent = forwardRef((_, mapRef) => {
         mapRef,
         () => ({
             startRoute: () => mapLibreImplementationRef.current?.startRoute(route),
+            setFollowModel: (value: boolean) => mapLibreImplementationRef.current?.setCameraFollowModel(value),
         }),
         [mapLibreImplementationRef.current]
     );

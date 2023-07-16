@@ -57,7 +57,10 @@ export class Model {
         const layer = this.getLayer();
 
         for (const position of positions) {
-            layer.setProps({ id: layer.id, data: [{ coords: position.coords, follow: true, bearing: 360 - position.bearing }] });
+            layer.setProps({
+                id: layer.id,
+                data: [{ coords: position.coords, follow: true, bearing: 360 - position.bearing, cameraBearing: position.bearing }],
+            });
             await new Promise<void>((res) => {
                 setTimeout(() => {
                     res();
@@ -72,11 +75,11 @@ export class Model {
             // @ts-ignore
             type: ScenegraphLayer,
             scenegraph: "https://model-repo-488fcbb8-6cc3-4249-9acf-ea68bbdda2ee.s3.eu-west-2.amazonaws.com/animated-car.glb",
-            data: [{ coords: [-122.420679, 37.772537], follow: true, bearing: 0 }],
+            data: [{ coords: [-122.420679, 37.772537], follow: true, bearing: 0, cameraBearing: 0 }],
             sizeScale: 10,
             getPosition: (d: ModelData) => {
                 if (d.follow) {
-                    this.camera.syncCameraToModel(d.coords);
+                    this.camera.syncCameraToModel(d.coords, d.cameraBearing);
                 }
                 return d.coords;
             },

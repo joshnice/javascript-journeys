@@ -1,9 +1,15 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { InputLocationComponent } from "../components/input";
 import { MapComponent, MapRef } from "../components/map";
+import { ToggleComponent } from "../components/toggle";
 
 export const MapPage = () => {
     const mapRef = useRef<MapRef>();
+    const [followModel, setFollowModel] = useState(false);
+    const handleSetFollowModel = (value: boolean) => {
+        mapRef.current?.setFollowModel(value);
+        setFollowModel(value);
+    };
     return (
         <div className="flex w-full h-full">
             <div className="w-4/5 h-full">
@@ -20,6 +26,11 @@ export const MapPage = () => {
                 </div>
                 <div>
                     <button onClick={() => mapRef.current?.startRoute()}>Start</button>
+                </div>
+                <div>
+                    <ToggleComponent value={followModel} setValue={handleSetFollowModel}>
+                        <span>Camera follow Model</span>
+                    </ToggleComponent>
                 </div>
             </div>
         </div>

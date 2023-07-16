@@ -35,6 +35,10 @@ export class MapLibreImplementation {
         this.model.modelFollowRoute(route);
     }
 
+    public setCameraFollowModel(value: boolean) {
+        this.camera.setFollowModel(value);
+    }
+
     public destroy() {
         this.map.remove();
     }
