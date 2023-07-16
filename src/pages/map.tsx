@@ -27,8 +27,6 @@ export const MapPage = () => {
         setRouteLocations({ ...routeLocations, [position]: location });
     };
 
-    console.log("routeLocations", routeLocations);
-
     const handleStartJourney = () => {
         const { start, finish } = routeLocations;
         if (start != null && finish != null) {
