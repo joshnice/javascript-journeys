@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { InputLocationComponent } from "../components/input";
 import { MapComponent, MapRef } from "../components/map";
 import { ToggleComponent } from "../components/toggle";
+import { ButtonComponent } from "../components/button";
 
 export const MapPage = () => {
     const mapRef = useRef<MapRef>();
@@ -25,7 +26,9 @@ export const MapPage = () => {
                     <InputLocationComponent />
                 </div>
                 <div>
-                    <button onClick={() => mapRef.current?.startRoute()}>Start</button>
+                    <ButtonComponent onClick={() => mapRef.current?.startRoute()} disabled={false}>
+                        <span>Start Journey</span>
+                    </ButtonComponent>
                 </div>
                 <div>
                     <ToggleComponent value={followModel} setValue={handleSetFollowModel}>
