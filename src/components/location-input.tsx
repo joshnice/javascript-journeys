@@ -4,7 +4,7 @@ import { useState } from "react";
 import { InputComponent } from "./input";
 
 type InputLocationProps = {
-    selectedLocation: LocationListItem | {};
+    selectedLocation: LocationListItem | null;
     onLocationSelected: (location: LocationListItem) => void;
 };
 

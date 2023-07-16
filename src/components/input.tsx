@@ -3,7 +3,7 @@ import { Combobox } from "@headlessui/react";
 interface InputProps<TValue extends { id: string; name: string }> {
     setSearchString: (searchString: string) => void;
     searchResults: TValue[];
-    selectedValue: TValue | {};
+    selectedValue: TValue | null;
     setSelectedValue: (value: TValue) => void;
 }
 

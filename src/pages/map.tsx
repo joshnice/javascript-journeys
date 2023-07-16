@@ -7,7 +7,7 @@ import { LocationListItem } from "../api/mapbox-direction";
 
 type RoutePosition = "start" | "finish";
 
-type RouteLocation = { start: LocationListItem | {}; finish: LocationListItem | {} };
+type RouteLocation = { start: LocationListItem | null; finish: LocationListItem | null };
 
 export const MapPage = () => {
     const mapRef = useRef<MapRef>();
@@ -19,8 +19,8 @@ export const MapPage = () => {
     };
 
     const [routeLocations, setRouteLocations] = useState<RouteLocation>({
-        start: {},
-        finish: {},
+        start: null,
+        finish: null,
     });
 
     const handleLocationChange = (location: LocationListItem, position: RoutePosition) => {
@@ -28,6 +28,13 @@ export const MapPage = () => {
     };
 
     console.log("routeLocations", routeLocations);
+
+    const handleStartJourney = () => {
+        const { start, finish } = routeLocations;
+        if (start != null && finish != null) {
+            mapRef.current?.startRoute(start.center, finish.center);
+        }
+    };
 
     return (
         <div className="flex w-full h-full">
@@ -50,7 +57,7 @@ export const MapPage = () => {
                     />
                 </div>
                 <div>
-                    <ButtonComponent onClick={() => mapRef.current?.startRoute()} disabled={false}>
+                    <ButtonComponent onClick={handleStartJourney} disabled={false}>
                         <span>Start Journey</span>
                     </ButtonComponent>
                 </div>
