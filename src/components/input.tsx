@@ -1,45 +1,32 @@
 import { Combobox } from "@headlessui/react";
-import { useQuery } from "@tanstack/react-query";
-import { getLocationList } from "../api/mapbox-direction";
-import { useState } from "react";
 
-export const InputLocationComponent = () => {
-    const [searchValue, setSearchValue] = useState("");
-    const [selectedValue, setSelectedValue] = useState("");
+interface InputProps<TValue extends { id: string; name: string }> {
+    setSearchString: (searchString: string) => void;
+    searchResults: TValue[];
+    selectedValue: TValue | {};
+    setSelectedValue: (value: TValue) => void;
+}
 
-    const { isLoading, data: locations } = useQuery(
-        [`location-${searchValue}`],
-        () => getLocationList(searchValue)
-    );
-
-    const handleSelectedLocation = (id: string) => {
-        const selected = locations?.find((location) => location.id === id);
-        if (selected != null) {
-            setSelectedValue(selected.name);
-        }
-    };
-
-    return (
-        <div className="relative">
-            <Combobox value={selectedValue} onChange={handleSelectedLocation}>
-                <Combobox.Input
-                    className="border-2 border-black p-2 rounded-lg w-full"
-                    onChange={(event) => setSearchValue(event.target.value)}
-                />
-                <Combobox.Options
-                    className={`border-2 border-black p-2 rounded-lg w-full absolute bg-white z-10 ${
-                        locations?.length === 0 || isLoading ? "hidden" : ""
-                    }`}
-                >
-                    {locations?.map((location) => (
-                        <Combobox.Option key={location.id} value={location.id}>
-                            <button className="text-left hover:bg-slate-100 w-full">
-                                {location.name}
-                            </button>
-                        </Combobox.Option>
-                    ))}
-                </Combobox.Options>
-            </Combobox>
-        </div>
-    );
-};
+export const InputComponent = <TValue extends { id: string; name: string }>({
+    setSearchString,
+    searchResults,
+    selectedValue,
+    setSelectedValue,
+}: InputProps<TValue>) => (
+    <div className="relative">
+        <Combobox value={selectedValue} onChange={setSelectedValue}>
+            <Combobox.Input
+                className="border-2 border-black p-2 rounded-lg w-full"
+                onChange={(event) => setSearchString(event.target.value)}
+                displayValue={(result: TValue) => result?.name ?? ""}
+            />
+            <Combobox.Options className={`border-2 border-black p-2 rounded-lg w-full absolute bg-white z-10`}>
+                {searchResults?.map((result) => (
+                    <Combobox.Option key={result.id} value={result}>
+                        <button className="text-left hover:bg-slate-100 w-full">{result.name}</button>
+                    </Combobox.Option>
+                ))}
+            </Combobox.Options>
+        </Combobox>
+    </div>
+);

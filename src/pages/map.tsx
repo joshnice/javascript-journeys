@@ -1,16 +1,34 @@
 import { useRef, useState } from "react";
-import { InputLocationComponent } from "../components/input";
+import { InputLocationComponent } from "../components/location-input";
 import { MapComponent, MapRef } from "../components/map";
 import { ToggleComponent } from "../components/toggle";
 import { ButtonComponent } from "../components/button";
+import { LocationListItem } from "../api/mapbox-direction";
+
+type RoutePosition = "start" | "finish";
+
+type RouteLocation = { start: LocationListItem | {}; finish: LocationListItem | {} };
 
 export const MapPage = () => {
     const mapRef = useRef<MapRef>();
+
     const [followModel, setFollowModel] = useState(false);
     const handleSetFollowModel = (value: boolean) => {
         mapRef.current?.setFollowModel(value);
         setFollowModel(value);
     };
+
+    const [routeLocations, setRouteLocations] = useState<RouteLocation>({
+        start: {},
+        finish: {},
+    });
+
+    const handleLocationChange = (location: LocationListItem, position: RoutePosition) => {
+        setRouteLocations({ ...routeLocations, [position]: location });
+    };
+
+    console.log("routeLocations", routeLocations);
+
     return (
         <div className="flex w-full h-full">
             <div className="w-4/5 h-full">
@@ -19,11 +37,17 @@ export const MapPage = () => {
             <div className="flex flex-grow flex-col p-4 gap-4">
                 <div className="flex flex-col gap-2 w-full">
                     Starting Destination
-                    <InputLocationComponent />
+                    <InputLocationComponent
+                        selectedLocation={routeLocations.start}
+                        onLocationSelected={(location) => handleLocationChange(location, "start")}
+                    />
                 </div>
                 <div className="flex flex-col gap-2 w-full">
                     Final Destination
-                    <InputLocationComponent />
+                    <InputLocationComponent
+                        selectedLocation={routeLocations.finish}
+                        onLocationSelected={(location) => handleLocationChange(location, "finish")}
+                    />
                 </div>
                 <div>
                     <ButtonComponent onClick={() => mapRef.current?.startRoute()} disabled={false}>

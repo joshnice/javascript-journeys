@@ -1,22 +1,17 @@
 import { v4 as uuid } from "uuid";
 
-// const forwardGeocodingApiRoute = "https://api.mapbox.com/geocoding/v5/{endpoint}/{search_text}.json";
-// https://api.mapbox.com/geocoding/v5/mapbox.places/cen.json?proximity=ip&access_token=
-
-// GET: https://api.mapbox.com/directions/v5/mapbox/driving/-74.190147%2C40.66331%3B-74.043382%2C40.781029?geometries=geojson&language=en&overview=full&steps=true
-
 const geocodingApiKey = "pk.eyJ1Ijoiam9zaG5pY2U5OCIsImEiOiJjanlrMnYwd2IwOWMwM29vcnQ2aWIwamw2In0.RRsdQF3s2hQ6qK-7BH5cKg";
 
-export type LocationList = {
+export type LocationListItem = {
     id: string;
     bbox: [number, number, number, number];
     center: [number, number];
     name: string;
 };
 
-type LocationListResult = Omit<LocationList, "name"> & { place_name: string };
+type LocationListResult = Omit<LocationListItem, "name"> & { place_name: string };
 
-export async function getLocationList(searchPhrase: string): Promise<LocationList[]> {
+export async function getLocationList(searchPhrase: string): Promise<LocationListItem[]> {
     const response = await fetch(
         `https://api.mapbox.com/geocoding/v5/mapbox.places/${searchPhrase}.json?proximity=ip&access_token=${geocodingApiKey}`
     );
