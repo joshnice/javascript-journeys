@@ -7,8 +7,8 @@ export class MapLibreImplementation {
     constructor(mapElement: HTMLElement) {
         this.map = new Map({
             container: mapElement,
-            center: [-122.420679, 37.772537],
-            zoom: 20,
+            center: [-0.544829, 53.228421],
+            zoom: 19,
             style: "https://api.maptiler.com/maps/streets/style.json?key=IHriHQgQWN2WA4EHxu0r",
             attributionControl: false,
             hash: true,
