@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { InputLocationComponent } from "../components/location-input";
 import { MapComponent, MapRef } from "../components/map";
 import { ToggleComponent } from "../components/toggle";
@@ -34,6 +34,10 @@ export const MapPage = () => {
         }
     };
 
+    const disableStartJourney = useMemo(() => {
+        return routeLocations.start == null || routeLocations.finish == null;
+    }, [routeLocations]);
+
     return (
         <div className="flex w-full h-full">
             <div className="w-4/5 h-full">
@@ -55,7 +59,7 @@ export const MapPage = () => {
                     />
                 </div>
                 <div>
-                    <ButtonComponent onClick={handleStartJourney} disabled={false}>
+                    <ButtonComponent onClick={handleStartJourney} disabled={disableStartJourney}>
                         <span>Start Journey</span>
                     </ButtonComponent>
                 </div>
