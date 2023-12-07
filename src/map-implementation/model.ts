@@ -76,7 +76,7 @@ export class Model {
             id: uuid(),
             // @ts-ignore
             type: ScenegraphLayer,
-            scenegraph: "https://model-repo-488fcbb8-6cc3-4249-9acf-ea68bbdda2ee.s3.eu-west-2.amazonaws.com/animated-car.glb",
+            scenegraph: "https://model-repo-488fcbb8-6cc3-4249-9acf-ea68bbdda2ee.s3.eu-west-2.amazonaws.com/santa.glb",
             data: [{ coords: [-0.544829, 53.228421], follow: true, bearing: 0, cameraBearing: 0 }],
             sizeScale: 10,
             getPosition: (d: ModelData) => {
